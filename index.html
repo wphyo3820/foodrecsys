@@ -17,7 +17,7 @@
 
 <!-- General and theme style sheets -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/reveal.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/theme/simple.css" id="theme">
+<link rel="stylesheet" href="robut-lung.css" id="theme">
 
 <!-- If the query includes 'print-pdf', include the PDF print sheet -->
 <script>
@@ -13129,7 +13129,7 @@ div.cell.selected {
 <style type="text/css">
 /* Overrides of notebook CSS for static HTML export */
 .reveal {
-  font-size: 200%;
+  font-size: 160%;
 }
 .reveal pre {
   width: inherit;
@@ -13255,30 +13255,28 @@ a.anchor-link {
 <div class="reveal">
 <div class="slides">
 <section><section>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="User-Item-Based-Collaborative-Filtering">User-Item Based Collaborative Filtering<a class="anchor-link" href="#User-Item-Based-Collaborative-Filtering">&#182;</a></h1><p>BANA 295: Advanced Data Analytics</p>
+<h1 id="A-Hybrid-User-Item-Based-Collaborative-Filtering-Model">A Hybrid User-Item Based Collaborative Filtering Model<a class="anchor-link" href="#A-Hybrid-User-Item-Based-Collaborative-Filtering-Model">&#182;</a></h1><p><strong>BANA 295: Advanced Data Analytics</strong></p>
 <p>Team 20 - Geetika Jain, Qinyu Xia, Wai Phyo, Wenjia Ma</p>
 
 </div>
 </div>
-</div></section><section>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Agenda</p>
+<p>Agenda:</p>
 <ul>
-<li>Objective</li>
-<li>Data Parsing</li>
-<li>...</li>
+<li>Step 1: Parsing for relevant information</li>
+<li>Step 2: Representing each recipe as a vector</li>
+<li>Step 3: Calculate adjusted ratings for each user</li>
+<li>Step 4: Predict ratings for unrated recipes for a given user</li>
 </ul>
 
 </div>
 </div>
-</div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div></div></section></section><section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>First, let's read in the data.</p>
 
@@ -13287,7 +13285,7 @@ a.anchor-link {
 </div><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">recipes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;core-data_recipe.csv&#39;</span><span class="p">)</span>
@@ -13300,7 +13298,7 @@ a.anchor-link {
 </div></div><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">recipes</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -13313,11 +13311,7 @@ a.anchor-link {
 <div class="output_wrapper">
 <div class="output">
 
-
 <div class="output_area">
-
-    <div class="prompt output_prompt">Out[3]:</div>
-
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -13403,19 +13397,33 @@ a.anchor-link {
 </div>
 </div>
 
-</div></div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div></div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>First objective is to generate new feature columns based on existing columns. Here, I'll be mainly working with 2 columns (nutritions and cooking_directions).</p>
+<p>The relevant columns are <strong>recipe_name</strong>, <strong>ingredients</strong>, <strong>cooking_directions</strong>, and <strong>nutritions</strong>.</p>
+<p>First objective is to generate new feature columns based on existing columns.</p>
+<p>The two columns: <strong>cooking_directions</strong> and <strong>nutritions</strong> will need to be examined as currently the column values are string literals.</p>
 <p>We'll need to parse those columns and gather each respective column values.</p>
 
 </div>
 </div>
-</div></section><section>
+</div></div></section></section><section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Step-1:-Parsing-For-Relevant-Information">Step 1: Parsing For Relevant Information<a class="anchor-link" href="#Step-1:-Parsing-For-Relevant-Information">&#182;</a></h1>
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This is a helper function to convert a time string into minutes. This is necessary for parsing time data in <strong>cooking_directions</strong> column.</p>
+
+</div>
+</div>
+</div></div><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">convert_time</span><span class="p">(</span><span class="n">time_str</span><span class="p">):</span>
@@ -13445,10 +13453,62 @@ a.anchor-link {
 </div>
 </div>
 
-</div></section><section>
+</div></div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A quick example:</p>
+
+</div>
+</div>
+</div></div><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">convert_time</span><span class="p">(</span><span class="s2">&quot;2h 30m&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">convert_time</span><span class="p">(</span><span class="s2">&quot;50m&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">convert_time</span><span class="p">(</span><span class="s2">&quot;3h&quot;</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>150
+50
+180
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div></div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The convert_time function works flexibly as it can convert any combination of n-hours and n-minutes.</p>
+
+</div>
+</div>
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This is a helper function to parse the Prep Time, Cook Time, Ready Time, and the actual cooking directions from the cooking_directions column.</p>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_cooking_dir</span><span class="p">(</span><span class="n">directions</span><span class="p">):</span>
@@ -13488,10 +13548,57 @@ a.anchor-link {
 </div>
 </div>
 
-</div></section><section>
+</div></div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A quick example:</p>
+
+</div>
+</div>
+</div></div><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">get_cooking_dir</span><span class="p">(</span><span class="n">recipes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cooking_directions</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>prep_time                                                    15
+cook_time                                                   150
+ready_time                                                  165
+directions    Preheat oven to 325 degrees F (165 degrees C)....
+dtype: object</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Another helper function to parse nutritional values such as Carbohydrates, Calories and Potassium etc. from the nutritions column.</p>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_nutri_values</span><span class="p">(</span><span class="n">nutrition</span><span class="p">):</span>
@@ -13513,18 +13620,73 @@ a.anchor-link {
 </div>
 </div>
 
-</div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div></div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now, let's parse the two columns and create the necessary extra columns.</p>
+<p>A quick example:</p>
+
+</div>
+</div>
+</div></div><div class="fragment">
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">get_nutri_values</span><span class="p">(</span><span class="n">recipes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">nutritions</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>niacin               15.601600
+sugars               19.841460
+sodium             2606.764000
+carbohydrates        32.081760
+vitaminB6             1.328631
+calories            371.721900
+thiamin               0.842312
+fat                  11.675210
+folate               83.739250
+caloriesFromFat     105.076900
+calcium             135.453800
+fiber                10.223360
+magnesium            80.737120
+iron                  6.622245
+cholesterol          99.200000
+protein              36.398780
+vitaminA             73.177850
+potassium          1088.923000
+saturatedFat          3.646474
+vitaminC             52.768480
+dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Finally, let's parse the two columns and create the necessary extra columns by concatenating the resulting dataframes.</p>
 
 </div>
 </div>
 </div><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="p">[</span>
@@ -13543,33 +13705,26 @@ a.anchor-link {
 <div class="output_wrapper">
 <div class="output">
 
-
 <div class="output_area">
 
-    <div class="prompt"></div>
-
-
 
 
 
  
  
-<div id="5c77798b-a8f3-44d6-baa3-8e48de5a6c4b"></div>
+<div id="be01e772-5a01-46cd-b667-4608f598e027"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#5c77798b-a8f3-44d6-baa3-8e48de5a6c4b');
+var element = $('#be01e772-5a01-46cd-b667-4608f598e027');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "1926c982cd0e43fb9b754e95ec0b29af", "version_major": 2, "version_minor": 0}
+{"model_id": "e5f90d2f20db4def85e87c098344d7a8", "version_major": 2, "version_minor": 0}
 </script>
 </div>
 
 </div>
 
 <div class="output_area">
-
-    <div class="prompt"></div>
-
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
@@ -13579,30 +13734,24 @@ var element = $('#5c77798b-a8f3-44d6-baa3-8e48de5a6c4b');
 
 <div class="output_area">
 
-    <div class="prompt"></div>
-
-
 
 
 
  
  
-<div id="47d350a4-e1dd-4a69-ae09-f61982b56d42"></div>
+<div id="5f548b05-7b0b-47c3-b1e4-8251030029f0"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#47d350a4-e1dd-4a69-ae09-f61982b56d42');
+var element = $('#5f548b05-7b0b-47c3-b1e4-8251030029f0');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "61cd27ac22cf4f8dbbb47745376266ac", "version_major": 2, "version_minor": 0}
+{"model_id": "d9d6bbd8a76c4275a82301be14cf0373", "version_major": 2, "version_minor": 0}
 </script>
 </div>
 
 </div>
 
 <div class="output_area">
-
-    <div class="prompt"></div>
-
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
@@ -13613,18 +13762,17 @@ var element = $('#47d350a4-e1dd-4a69-ae09-f61982b56d42');
 </div>
 </div>
 
-</div></div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div></div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Notice the new columns generated.</p>
 
 </div>
 </div>
-</div><div class="fragment">
+</div></div><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">recipes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">6</span><span class="p">:]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -13637,11 +13785,7 @@ var element = $('#47d350a4-e1dd-4a69-ae09-f61982b56d42');
 <div class="output_wrapper">
 <div class="output">
 
-
 <div class="output_area">
-
-    <div class="prompt output_prompt">Out[11]:</div>
-
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -13819,18 +13963,24 @@ var element = $('#47d350a4-e1dd-4a69-ae09-f61982b56d42');
 </div>
 
 </div></div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Next, we'll need to vectorize the feature columns and combine them.</p>
-<p>We will use FeatureUnion just like in HW2 to combine our vectors.</p>
-
+<h1 id="Step-2:-Representing-Each-Recipe-As-A-Vector">Step 2: Representing Each Recipe As A Vector<a class="anchor-link" href="#Step-2:-Representing-Each-Recipe-As-A-Vector">&#182;</a></h1>
 </div>
 </div>
 </div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next, we'll need to vectorize the feature columns and combine them.</p>
+<p>We will use FeatureUnion just like in HW2 to combine our vectors at the end.</p>
+<p>But first, let's write a callable transformation function for the custom features we created in Step 1.</p>
+
+</div>
+</div>
+</div></div><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">select_cooking_nutrition_columns</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
@@ -13851,9 +14001,26 @@ var element = $('#47d350a4-e1dd-4a69-ae09-f61982b56d42');
         <span class="s1">&#39;vitaminC&#39;</span>
     <span class="p">]</span>
     <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">keys</span><span class="p">]</span><span class="o">.</span><span class="n">swifter</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
 
+    </div>
+</div>
+</div>
 
-<span class="k">def</span> <span class="nf">tokenize_ingredients</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+</div></div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next, we write a another callable transformation function for the ingredients list. We use the <strong>^</strong> symbol as the token to split the text.</p>
+
+</div>
+</div>
+</div></div><div class="fragment">
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">tokenize_ingredients</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Helper function to tokenize the ingredients into a list</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -13865,31 +14032,362 @@ var element = $('#47d350a4-e1dd-4a69-ae09-f61982b56d42');
 </div>
 
 </div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now, we will create the necessary pipelines to read in the recipe dataframe, transform the relevant columns, and vectorize said columns.</p>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>First pipeline is for the cooking times and nutrition columns.</p>
+
+</div>
+</div>
+</div></div><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cook_nutr_features</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span>
     <span class="n">FunctionTransformer</span><span class="p">(</span><span class="n">select_cooking_nutrition_columns</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
     <span class="n">DictVectorizer</span><span class="p">())</span>
+</pre></div>
 
-<span class="n">direction_features</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span>
+    </div>
+</div>
+</div>
+
+</div></div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A quick example:</p>
+
+</div>
+</div>
+</div></div><div class="fragment">
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cook_nutr_features</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">recipes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+
+ 
+ 
+<div id="b61de2c8-f862-4374-9365-311a2be38f2e"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#b61de2c8-f862-4374-9365-311a2be38f2e');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "5bd0276560464e3797a49020f7649ced", "version_major": 2, "version_minor": 0}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([[1.354538e+02, 3.717219e+02, 1.050769e+02, 3.208176e+01,
+        9.920000e+01, 1.500000e+02, 1.167521e+01, 1.022336e+01,
+        8.373925e+01, 6.622245e+00, 8.073712e+01, 1.560160e+01,
+        1.088923e+03, 1.500000e+01, 3.639878e+01, 1.650000e+02,
+        3.646474e+00, 2.606764e+03, 1.984146e+01, 8.423121e-01,
+        7.317785e+01, 1.328631e+00, 5.276848e+01],
+       [6.008832e+01, 3.351655e+02, 2.126267e+02, 6.071931e+00,
+        7.140000e+01, 4.000000e+01, 2.362519e+01, 8.866814e-01,
+        6.907802e+00, 1.704567e+00, 2.421298e+01, 1.006679e+01,
+        2.491827e+02, 2.000000e+01, 2.391265e+01, 6.000000e+01,
+        5.683611e+00, 7.628050e+02, 2.361299e-01, 6.496000e-02,
+        3.593640e+02, 5.538000e-01, 5.307448e+00],
+       [5.284617e+02, 6.405617e+02, 2.643085e+02, 6.085943e+01,
+        6.138938e+01, 5.000000e+00, 2.936761e+01, 4.441335e+00,
+        2.342137e+02, 5.011620e+00, 6.467662e+01, 1.322826e+01,
+        3.488067e+02, 1.500000e+01, 3.237537e+01, 2.000000e+01,
+        1.091876e+01, 1.075527e+03, 1.974210e+00, 3.088000e-02,
+        6.047537e+02, 2.734955e-01, 1.801502e+01]])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Second pipeline is for the cooking directions (text data) we parsed from Step 1.</p>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">direction_features</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span>
     <span class="n">FunctionTransformer</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;directions&#39;</span><span class="p">],</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
     <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span> <span class="c1"># Can try different vectorizers here</span>
+</pre></div>
 
-<span class="n">ingredient_features</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span>
+    </div>
+</div>
+</div>
+
+</div></div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A quick example:</p>
+
+</div>
+</div>
+</div></div><div class="fragment">
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">direction_features</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">recipes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([[0.05612099, 0.05612099, 0.        , ..., 0.        , 0.        ,
+        0.        ],
+       [0.        , 0.        , 0.04393851, ..., 0.        , 0.        ,
+        0.08787703],
+       [0.        , 0.        , 0.        , ..., 0.09040278, 0.09040278,
+        0.        ]])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Third pipeline is for the ingredients.</p>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ingredient_features</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span>
     <span class="n">FunctionTransformer</span><span class="p">(</span><span class="n">tokenize_ingredients</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
     <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">analyzer</span><span class="o">=</span><span class="s1">&#39;word&#39;</span><span class="p">,</span>
                     <span class="n">tokenizer</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
                     <span class="n">preprocessor</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
                     <span class="n">token_pattern</span><span class="o">=</span><span class="kc">None</span><span class="p">))</span>
+</pre></div>
 
-<span class="n">recipe_name_features</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span>
+    </div>
+</div>
+</div>
+
+</div></div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A quick example:</p>
+
+</div>
+</div>
+</div></div><div class="fragment">
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ingredient_features</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">recipes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+
+ 
+ 
+<div id="ef6524da-e2e9-436a-a93f-4c640cdbc621"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#ef6524da-e2e9-436a-a93f-4c640cdbc621');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "4aa481d578404ed2acb063d122733f68", "version_major": 2, "version_minor": 0}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([[0.28867513, 0.28867513, 0.28867513, 0.28867513, 0.28867513,
+        0.28867513, 0.28867513, 0.        , 0.        , 0.        ,
+        0.        , 0.        , 0.28867513, 0.28867513, 0.        ,
+        0.28867513, 0.        , 0.        , 0.        , 0.28867513,
+        0.28867513, 0.        , 0.        , 0.        ],
+       [0.        , 0.        , 0.        , 0.        , 0.        ,
+        0.        , 0.        , 0.40824829, 0.        , 0.        ,
+        0.        , 0.        , 0.        , 0.        , 0.40824829,
+        0.        , 0.40824829, 0.40824829, 0.        , 0.        ,
+        0.        , 0.40824829, 0.        , 0.40824829],
+       [0.        , 0.        , 0.        , 0.        , 0.        ,
+        0.        , 0.        , 0.        , 0.40824829, 0.40824829,
+        0.40824829, 0.40824829, 0.        , 0.        , 0.        ,
+        0.        , 0.        , 0.        , 0.40824829, 0.        ,
+        0.        , 0.        , 0.40824829, 0.        ]])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Last pipeline is for the recipe name itself.</p>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">recipe_name_features</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span>
     <span class="n">FunctionTransformer</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;recipe_name&#39;</span><span class="p">],</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
     <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span> <span class="c1"># Can try different vectorizers here</span>
+</pre></div>
 
-<span class="n">features</span> <span class="o">=</span> <span class="n">FeatureUnion</span><span class="p">([(</span><span class="s1">&#39;cook_nutr_feats&#39;</span><span class="p">,</span> <span class="n">cook_nutr_features</span><span class="p">),</span>
+    </div>
+</div>
+</div>
+
+</div></div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A quick example:</p>
+
+</div>
+</div>
+</div></div><div class="fragment">
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">recipe_name_features</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">recipes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([[0.33333333, 0.33333333, 0.33333333, 0.33333333, 0.        ,
+        0.        , 0.        , 0.        , 0.        , 0.33333333,
+        0.33333333, 0.        , 0.        , 0.        , 0.33333333,
+        0.33333333, 0.        , 0.        , 0.33333333, 0.        ],
+       [0.        , 0.        , 0.        , 0.        , 0.29651988,
+        0.        , 0.38988801, 0.38988801, 0.38988801, 0.        ,
+        0.        , 0.        , 0.        , 0.        , 0.        ,
+        0.        , 0.38988801, 0.38988801, 0.        , 0.38988801],
+       [0.        , 0.        , 0.        , 0.        , 0.35543247,
+        0.46735098, 0.        , 0.        , 0.        , 0.        ,
+        0.        , 0.46735098, 0.46735098, 0.46735098, 0.        ,
+        0.        , 0.        , 0.        , 0.        , 0.        ]])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Finally, we'll combine all the pipelines to create the entire vector representations for each of our recipe.</p>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">features</span> <span class="o">=</span> <span class="n">FeatureUnion</span><span class="p">([(</span><span class="s1">&#39;cook_nutr_feats&#39;</span><span class="p">,</span> <span class="n">cook_nutr_features</span><span class="p">),</span>
                          <span class="p">(</span><span class="s1">&#39;dir_feats&#39;</span><span class="p">,</span> <span class="n">direction_features</span><span class="p">),</span>
                          <span class="p">(</span><span class="s1">&#39;ing_feats&#39;</span><span class="p">,</span> <span class="n">ingredient_features</span><span class="p">),</span>
                          <span class="p">(</span><span class="s1">&#39;rec_name_feats&#39;</span><span class="p">,</span> <span class="n">recipe_name_features</span><span class="p">)])</span>
@@ -13899,18 +14397,17 @@ var element = $('#47d350a4-e1dd-4a69-ae09-f61982b56d42');
 </div>
 </div>
 
-</div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div></div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>And now we fit transform to get our feature vectors for all recipes.</p>
 
 </div>
 </div>
-</div><div class="fragment">
+</div></div><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cust_feats</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">recipes</span><span class="p">)</span>
@@ -13923,33 +14420,26 @@ var element = $('#47d350a4-e1dd-4a69-ae09-f61982b56d42');
 <div class="output_wrapper">
 <div class="output">
 
-
 <div class="output_area">
 
-    <div class="prompt"></div>
-
-
 
 
 
  
  
-<div id="1352de51-f2c1-4c42-a115-7a29506770cc"></div>
+<div id="74c237d9-029a-41a0-be1c-6f312a9e9664"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#1352de51-f2c1-4c42-a115-7a29506770cc');
+var element = $('#74c237d9-029a-41a0-be1c-6f312a9e9664');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "8f4726f90de2487896e6acb3499ceeca", "version_major": 2, "version_minor": 0}
+{"model_id": "af984d2fcf634b74befbc08d59634b0c", "version_major": 2, "version_minor": 0}
 </script>
 </div>
 
 </div>
 
 <div class="output_area">
-
-    <div class="prompt"></div>
-
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
@@ -13959,30 +14449,24 @@ var element = $('#1352de51-f2c1-4c42-a115-7a29506770cc');
 
 <div class="output_area">
 
-    <div class="prompt"></div>
-
-
 
 
 
  
  
-<div id="ff264573-2bf6-494e-bf73-425842ad425a"></div>
+<div id="78426b50-c4f8-432f-9695-5f503dab8729"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#ff264573-2bf6-494e-bf73-425842ad425a');
+var element = $('#78426b50-c4f8-432f-9695-5f503dab8729');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "4983408e4f874f7d8bbf36d4606ab163", "version_major": 2, "version_minor": 0}
+{"model_id": "e944030ab8814cb79ea40591d9cf994f", "version_major": 2, "version_minor": 0}
 </script>
 </div>
 
 </div>
 
 <div class="output_area">
-
-    <div class="prompt"></div>
-
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
@@ -13993,18 +14477,17 @@ var element = $('#ff264573-2bf6-494e-bf73-425842ad425a');
 </div>
 </div>
 
-</div></div></section><section>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div></div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Now we have our sparse matrix with 45630 rows of recipes with 336707 feature columns.</p>
 
 </div>
 </div>
-</div><div class="fragment">
+</div></div><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cust_feats</span>
@@ -14017,11 +14500,7 @@ var element = $('#ff264573-2bf6-494e-bf73-425842ad425a');
 <div class="output_wrapper">
 <div class="output">
 
-
 <div class="output_area">
-
-    <div class="prompt output_prompt">Out[16]:</div>
-
 
 
 
@@ -14036,20 +14515,27 @@ var element = $('#ff264573-2bf6-494e-bf73-425842ad425a');
 </div>
 
 </div></div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Step-3:-Calculate-Adjusted-Ratings-For-Each-User">Step 3: Calculate Adjusted Ratings For Each User<a class="anchor-link" href="#Step-3:-Calculate-Adjusted-Ratings-For-Each-User">&#182;</a></h1>
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Now, let's read in the train data of our user ratings.</p>
 
 </div>
 </div>
-</div><div class="fragment">
+</div></div><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;core-data-train_rating.csv&#39;</span><span class="p">)</span>
+<span class="c1"># drop date column since its uncessary (optional)</span>
+<span class="n">train</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;dateLastModified&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14057,30 +14543,9 @@ var element = $('#ff264573-2bf6-494e-bf73-425842ad425a');
 </div>
 
 </div></div><div class="fragment">
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>I dropped the dates since its not required, but this step is optional.</p>
-
-</div>
-</div>
-</div></div><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;dateLastModified&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
 
-    </div>
-</div>
-</div>
-
-</div></div></section><section>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -14093,11 +14558,7 @@ var element = $('#ff264573-2bf6-494e-bf73-425842ad425a');
 <div class="output_wrapper">
 <div class="output">
 
-
 <div class="output_area">
-
-    <div class="prompt output_prompt">Out[19]:</div>
-
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -14165,18 +14626,17 @@ var element = $('#ff264573-2bf6-494e-bf73-425842ad425a');
 </div>
 </div>
 
-</div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Let's get the mean ratings of each recipe given from the training data.</p>
+<p>Let's get the mean ratings of each recipe given from the training data. We'll group by the recipe_ids, calculate each group's means, and merge them back to train_df.</p>
 
 </div>
 </div>
 </div><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">mean_ratings</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span>
@@ -14184,19 +14644,8 @@ var element = $('#ff264573-2bf6-494e-bf73-425842ad425a');
     <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;rating&quot;</span><span class="p">:</span> <span class="s2">&quot;rating_mean&quot;</span><span class="p">})[[</span>
         <span class="s2">&quot;recipe_id&quot;</span><span class="p">,</span> <span class="s2">&quot;rating_mean&quot;</span>
     <span class="p">]]</span>
-</pre></div>
 
-    </div>
-</div>
-</div>
-
-</div></div><div class="fragment">
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">train</span><span class="p">,</span>
+<span class="n">train_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">train</span><span class="p">,</span>
                     <span class="n">mean_ratings</span><span class="p">,</span>
                     <span class="n">on</span><span class="o">=</span><span class="s2">&quot;recipe_id&quot;</span><span class="p">,</span>
                     <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
@@ -14207,31 +14656,10 @@ var element = $('#ff264573-2bf6-494e-bf73-425842ad425a');
 </div>
 </div>
 
-</div></div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>And now we calculate the adjusted ratings for each user.</p>
-
-</div>
-</div>
-</div><div class="fragment">
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="p">[</span><span class="s2">&quot;rating_adjusted&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">train_df</span><span class="p">[</span><span class="s2">&quot;rating&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">train_df</span><span class="p">[</span><span class="s2">&quot;rating_mean&quot;</span><span class="p">]</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
 </div></div><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -14244,11 +14672,117 @@ var element = $('#ff264573-2bf6-494e-bf73-425842ad425a');
 <div class="output_wrapper">
 <div class="output">
 
-
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[23]:</div>
 
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>user_id</th>
+      <th>recipe_id</th>
+      <th>rating</th>
+      <th>rating_mean</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5215572</td>
+      <td>17991</td>
+      <td>5</td>
+      <td>4.503632</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>5215572</td>
+      <td>170724</td>
+      <td>4</td>
+      <td>4.214286</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>5215572</td>
+      <td>18045</td>
+      <td>5</td>
+      <td>4.591440</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3622615</td>
+      <td>60598</td>
+      <td>4</td>
+      <td>4.554545</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1313770</td>
+      <td>47519</td>
+      <td>5</td>
+      <td>4.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>And now we calculate the adjusted ratings for each user.</p>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="p">[</span><span class="s2">&quot;rating_adjusted&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">train_df</span><span class="p">[</span><span class="s2">&quot;rating&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">train_df</span><span class="p">[</span><span class="s2">&quot;rating_mean&quot;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div></div><div class="fragment">
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -14329,147 +14863,39 @@ var element = $('#ff264573-2bf6-494e-bf73-425842ad425a');
 </div>
 
 </div></div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Read in the test data.</p>
-
+<h1 id="Step-4:-Predict-Ratings-For-Unrated-Recipes-For-A-Given-User">Step 4: Predict Ratings For Unrated Recipes For A Given User<a class="anchor-link" href="#Step-4:-Predict-Ratings-For-Unrated-Recipes-For-A-Given-User">&#182;</a></h1>
 </div>
 </div>
-</div></section></section><section><section>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;core-data-test_rating.csv&#39;</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
 </div><div class="fragment">
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>I'll drop the dates here too.</p>
+<p>The ratings are predicted based on this formula:</p>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*vz3Xt6oKEocG2rWVHnde1g.png" alt=""></p>
+<p>In simpler terms, the predicted rating for a target recipe by a target user is calculated by adding the mean rating for the target recipe and the target user behavior bias.</p>
+<p>The target user behavior bias is defined by calculating the cosine similarity between each pair of vectors. We then choose the $k$ most similar recipes and calculate the weighted mean user bias based on its adjusted ratings we calculated in Step 3.</p>
 
 </div>
 </div>
 </div></div><div class="fragment">
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;dateLastModified&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div></div><div class="fragment">
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[27]:</div>
-
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>user_id</th>
-      <th>recipe_id</th>
-      <th>rating</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>5215572</td>
-      <td>55090</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>5215572</td>
-      <td>26317</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>5215572</td>
-      <td>15125</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>3622615</td>
-      <td>26317</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>1313770</td>
-      <td>55641</td>
-      <td>5</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
-</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="https://imgur.com/2ioxP6N.png" alt=""></p>
 
 </div>
 </div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Now, we implement the logic to predict user ratings.</p>
 
 </div>
 </div>
-</div></div></section></section><section><section>
+</div><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_indices</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">recipe_ids</span><span class="p">):</span>
@@ -14539,18 +14965,123 @@ var element = $('#ff264573-2bf6-494e-bf73-425842ad425a');
 </div>
 </div>
 
-</div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now we can make our predictions...</p>
+<p>Now we can make our predictions!</p>
 
 </div>
 </div>
 </div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Read in the test data.</p>
+
+</div>
+</div>
+</div></div><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;core-data-test_rating.csv&#39;</span><span class="p">)</span>
+<span class="c1"># drop date column since its uncessary (optional)</span>
+<span class="n">test</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;dateLastModified&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div></div><div class="fragment">
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>user_id</th>
+      <th>recipe_id</th>
+      <th>rating</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5215572</td>
+      <td>55090</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>5215572</td>
+      <td>26317</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>5215572</td>
+      <td>15125</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3622615</td>
+      <td>26317</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1313770</td>
+      <td>55641</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div></div><div class="fragment">
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">make_predictions</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
@@ -14572,33 +15103,26 @@ var element = $('#ff264573-2bf6-494e-bf73-425842ad425a');
 <div class="output_wrapper">
 <div class="output">
 
-
 <div class="output_area">
 
-    <div class="prompt"></div>
-
-
 
 
 
  
  
-<div id="c2c9f5d0-4ecf-49a4-b5b0-da863056cc86"></div>
+<div id="1a8e576a-ef12-447c-8cc0-4927474dcfba"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#c2c9f5d0-4ecf-49a4-b5b0-da863056cc86');
+var element = $('#1a8e576a-ef12-447c-8cc0-4927474dcfba');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "d521096333b643c3ad414119286d1289", "version_major": 2, "version_minor": 0}
+{"model_id": "b003f0afab4f44dfadb42ee1682e0845", "version_major": 2, "version_minor": 0}
 </script>
 </div>
 
 </div>
 
 <div class="output_area">
-
-    <div class="prompt"></div>
-
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
@@ -14609,9 +15133,8 @@ var element = $('#c2c9f5d0-4ecf-49a4-b5b0-da863056cc86');
 </div>
 </div>
 
-</div></div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Calculate the mean absolute error of our predictions.</p>
 
@@ -14620,10 +15143,14 @@ var element = $('#c2c9f5d0-4ecf-49a4-b5b0-da863056cc86');
 </div><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[30]:</div>
+
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">sample_test</span><span class="o">.</span><span class="n">rating</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">sample_test</span><span class="o">.</span><span class="n">predictions</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">rounded_mae</span> <span class="o">=</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">sample_test</span><span class="o">.</span><span class="n">rating</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">sample_test</span><span class="o">.</span><span class="n">predictions</span><span class="p">))</span>
+<span class="n">regular_mae</span> <span class="o">=</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">sample_test</span><span class="o">.</span><span class="n">rating</span><span class="p">,</span> <span class="n">sample_test</span><span class="o">.</span><span class="n">predictions</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Rounded MAE: </span><span class="si">{rounded_mae}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Regular MAE: </span><span class="si">{regular_mae}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14633,18 +15160,13 @@ var element = $('#c2c9f5d0-4ecf-49a4-b5b0-da863056cc86');
 <div class="output_wrapper">
 <div class="output">
 
-
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[30]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>0.58</pre>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Rounded MAE: 0.54
+Regular MAE: 0.6556445131396856
+</pre>
 </div>
-
 </div>
 
 </div>
@@ -14653,7 +15175,7 @@ var element = $('#c2c9f5d0-4ecf-49a4-b5b0-da863056cc86');
 </div></div><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[31]:</div>
+
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">sample_test</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -14666,11 +15188,7 @@ var element = $('#c2c9f5d0-4ecf-49a4-b5b0-da863056cc86');
 <div class="output_wrapper">
 <div class="output">
 
-
 <div class="output_area">
-
-    <div class="prompt output_prompt">Out[31]:</div>
-
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -14700,39 +15218,39 @@ var element = $('#c2c9f5d0-4ecf-49a4-b5b0-da863056cc86');
   </thead>
   <tbody>
     <tr>
-      <th>50092</th>
-      <td>2702518</td>
-      <td>238936</td>
+      <th>52331</th>
+      <td>7551824</td>
+      <td>174365</td>
+      <td>5</td>
+      <td>3.925396</td>
+    </tr>
+    <tr>
+      <th>219736</th>
+      <td>1454086</td>
+      <td>22971</td>
+      <td>2</td>
+      <td>3.376819</td>
+    </tr>
+    <tr>
+      <th>69148</th>
+      <td>799386</td>
+      <td>16706</td>
+      <td>5</td>
+      <td>4.858578</td>
+    </tr>
+    <tr>
+      <th>127199</th>
+      <td>4701524</td>
+      <td>194340</td>
       <td>4</td>
-      <td>4.166710</td>
+      <td>3.855447</td>
     </tr>
     <tr>
-      <th>86032</th>
-      <td>2440869</td>
-      <td>16359</td>
+      <th>29855</th>
+      <td>4583714</td>
+      <td>218942</td>
       <td>5</td>
-      <td>5.145842</td>
-    </tr>
-    <tr>
-      <th>87389</th>
-      <td>1139698</td>
-      <td>8358</td>
-      <td>5</td>
-      <td>5.008195</td>
-    </tr>
-    <tr>
-      <th>30562</th>
-      <td>2361733</td>
-      <td>17291</td>
-      <td>4</td>
-      <td>4.442089</td>
-    </tr>
-    <tr>
-      <th>243870</th>
-      <td>4322085</td>
-      <td>214651</td>
-      <td>5</td>
-      <td>5.191436</td>
+      <td>4.748897</td>
     </tr>
   </tbody>
 </table>
@@ -14744,9 +15262,8 @@ var element = $('#c2c9f5d0-4ecf-49a4-b5b0-da863056cc86');
 </div>
 </div>
 
-</div></div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Quick demo for on-the-fly prediction:</p>
 
@@ -14755,10 +15272,10 @@ var element = $('#c2c9f5d0-4ecf-49a4-b5b0-da863056cc86');
 </div><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[33]:</div>
+
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">target</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">({</span><span class="s2">&quot;user_id&quot;</span><span class="p">:</span> <span class="mi">1313770</span><span class="p">,</span> <span class="s2">&quot;recipe_id&quot;</span><span class="p">:</span> <span class="mi">21307</span><span class="p">})</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">target</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">({</span><span class="s2">&quot;user_id&quot;</span><span class="p">:</span> <span class="mi">2702518</span><span class="p">,</span> <span class="s2">&quot;recipe_id&quot;</span><span class="p">:</span> <span class="mi">8358</span><span class="p">})</span>
 </pre></div>
 
     </div>
@@ -14768,7 +15285,7 @@ var element = $('#c2c9f5d0-4ecf-49a4-b5b0-da863056cc86');
 </div></div><div class="fragment">
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[34]:</div>
+
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">pred</span> <span class="o">=</span> <span class="n">make_predictions</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
@@ -14783,14 +15300,10 @@ var element = $('#c2c9f5d0-4ecf-49a4-b5b0-da863056cc86');
 <div class="output_wrapper">
 <div class="output">
 
-
 <div class="output_area">
 
-    <div class="prompt"></div>
-
-
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Prediction: 5.355764462707368
+<pre>Prediction: 4.515418300820612
 Rounded: 5.0
 </pre>
 </div>
@@ -14820,14 +15333,14 @@ require(
 
         // Full list of configuration options available here: https://github.com/hakimel/reveal.js#configuration
         Reveal.initialize({
-            width: "100%",
+            controls: true,
+            progress: true,
+            history: true,
+            width: "90%",
 	          height: "100%",
 	          margin: 0,
 	          minScale: 1,
 	          maxScale: 1,
-            controls: true,
-            progress: true,
-            history: true,
             center: false,
             transition: "slide",
 
