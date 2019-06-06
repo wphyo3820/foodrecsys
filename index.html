@@ -17,7 +17,7 @@
 
 <!-- General and theme style sheets -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/reveal.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/theme/serif.css" id="theme">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/theme/simple.css" id="theme">
 
 <!-- If the query includes 'print-pdf', include the PDF print sheet -->
 <script>
@@ -13129,7 +13129,7 @@ div.cell.selected {
 <style type="text/css">
 /* Overrides of notebook CSS for static HTML export */
 .reveal {
-  font-size: 160%;
+  font-size: 200%;
 }
 .reveal pre {
   width: inherit;
@@ -13554,10 +13554,10 @@ a.anchor-link {
 
  
  
-<div id="2122fc79-cfd3-4815-a81f-759cae24713e"></div>
+<div id="5c77798b-a8f3-44d6-baa3-8e48de5a6c4b"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#2122fc79-cfd3-4815-a81f-759cae24713e');
+var element = $('#5c77798b-a8f3-44d6-baa3-8e48de5a6c4b');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "1926c982cd0e43fb9b754e95ec0b29af", "version_major": 2, "version_minor": 0}
@@ -13587,10 +13587,10 @@ var element = $('#2122fc79-cfd3-4815-a81f-759cae24713e');
 
  
  
-<div id="6dce1b51-ff97-458b-ae9f-93ce8487317a"></div>
+<div id="47d350a4-e1dd-4a69-ae09-f61982b56d42"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#6dce1b51-ff97-458b-ae9f-93ce8487317a');
+var element = $('#47d350a4-e1dd-4a69-ae09-f61982b56d42');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "61cd27ac22cf4f8dbbb47745376266ac", "version_major": 2, "version_minor": 0}
@@ -13934,10 +13934,10 @@ var element = $('#6dce1b51-ff97-458b-ae9f-93ce8487317a');
 
  
  
-<div id="8c0252fc-1959-412e-876b-89fe42afdd0d"></div>
+<div id="1352de51-f2c1-4c42-a115-7a29506770cc"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#8c0252fc-1959-412e-876b-89fe42afdd0d');
+var element = $('#1352de51-f2c1-4c42-a115-7a29506770cc');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "8f4726f90de2487896e6acb3499ceeca", "version_major": 2, "version_minor": 0}
@@ -13967,10 +13967,10 @@ var element = $('#8c0252fc-1959-412e-876b-89fe42afdd0d');
 
  
  
-<div id="a42ade47-ff99-48ac-b937-ec1cd6baf58a"></div>
+<div id="ff264573-2bf6-494e-bf73-425842ad425a"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#a42ade47-ff99-48ac-b937-ec1cd6baf58a');
+var element = $('#ff264573-2bf6-494e-bf73-425842ad425a');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "4983408e4f874f7d8bbf36d4606ab163", "version_major": 2, "version_minor": 0}
@@ -14583,10 +14583,10 @@ var element = $('#a42ade47-ff99-48ac-b937-ec1cd6baf58a');
 
  
  
-<div id="3c2d3806-9784-4a40-963c-df21ef0c8d17"></div>
+<div id="c2c9f5d0-4ecf-49a4-b5b0-da863056cc86"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#3c2d3806-9784-4a40-963c-df21ef0c8d17');
+var element = $('#c2c9f5d0-4ecf-49a4-b5b0-da863056cc86');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "d521096333b643c3ad414119286d1289", "version_major": 2, "version_minor": 0}
@@ -14820,11 +14820,16 @@ require(
 
         // Full list of configuration options available here: https://github.com/hakimel/reveal.js#configuration
         Reveal.initialize({
+            width: "100%",
+	          height: "100%",
+	          margin: 0,
+	          minScale: 1,
+	          maxScale: 1,
             controls: true,
             progress: true,
             history: true,
-
-            transition: "none",
+            center: false,
+            transition: "slide",
 
             // Optional libraries used to extend on reveal.js
             dependencies: [
