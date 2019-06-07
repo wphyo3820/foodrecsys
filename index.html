@@ -13712,13 +13712,13 @@ dtype: float64</pre>
 
  
  
-<div id="7e485955-720d-46ff-b7c7-17c02dbcc440"></div>
+<div id="0dae7e15-b64f-4a56-ad97-d405b35e0e78"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#7e485955-720d-46ff-b7c7-17c02dbcc440');
+var element = $('#0dae7e15-b64f-4a56-ad97-d405b35e0e78');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "b17df6c9365a488f974bbea06c522e99", "version_major": 2, "version_minor": 0}
+{"model_id": "6e32e6c474f8443b806f05fce5592906", "version_major": 2, "version_minor": 0}
 </script>
 </div>
 
@@ -13739,13 +13739,13 @@ var element = $('#7e485955-720d-46ff-b7c7-17c02dbcc440');
 
  
  
-<div id="a4105bb9-9abe-4b22-bf50-ebcdde47fdec"></div>
+<div id="679599b3-b73b-4994-bb58-61edb75c023e"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#a4105bb9-9abe-4b22-bf50-ebcdde47fdec');
+var element = $('#679599b3-b73b-4994-bb58-61edb75c023e');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "f165011c65184a2787ef9c9362de3372", "version_major": 2, "version_minor": 0}
+{"model_id": "f453f182d6d146d7ba50570354edaf2d", "version_major": 2, "version_minor": 0}
 </script>
 </div>
 
@@ -14090,13 +14090,13 @@ var element = $('#a4105bb9-9abe-4b22-bf50-ebcdde47fdec');
 
  
  
-<div id="56940fc0-9a8c-4a2e-80b6-45214aa0156f"></div>
+<div id="ba24c50a-9838-4027-a066-b8535005384f"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#56940fc0-9a8c-4a2e-80b6-45214aa0156f');
+var element = $('#ba24c50a-9838-4027-a066-b8535005384f');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "a21b16641f4845ff8cf69c41971349ae", "version_major": 2, "version_minor": 0}
+{"model_id": "d39d231fb7314174bdac8fab26ad63d7", "version_major": 2, "version_minor": 0}
 </script>
 </div>
 
@@ -14155,7 +14155,7 @@ var element = $('#56940fc0-9a8c-4a2e-80b6-45214aa0156f');
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">direction_features</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span>
     <span class="n">FunctionTransformer</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;directions&#39;</span><span class="p">],</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-    <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span> <span class="c1"># Can try different vectorizers here</span>
+    <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">stop_words</span><span class="o">=</span><span class="s2">&quot;english&quot;</span><span class="p">,</span> <span class="n">sublinear_tf</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span> <span class="c1"># Can try different vectorizers here</span>
 </pre></div>
 
     </div>
@@ -14190,11 +14190,11 @@ var element = $('#56940fc0-9a8c-4a2e-80b6-45214aa0156f');
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>array([[0.05612099, 0.05612099, 0.        , ..., 0.        , 0.        ,
+<pre>array([[0.06640118, 0.06640118, 0.06640118, ..., 0.        , 0.        ,
         0.        ],
-       [0.        , 0.        , 0.04393851, ..., 0.        , 0.        ,
-        0.08787703],
-       [0.        , 0.        , 0.        , ..., 0.09040278, 0.09040278,
+       [0.        , 0.        , 0.        , ..., 0.06280556, 0.06280556,
+        0.06280556],
+       [0.        , 0.        , 0.        , ..., 0.        , 0.        ,
         0.        ]])</pre>
 </div>
 
@@ -14258,13 +14258,13 @@ var element = $('#56940fc0-9a8c-4a2e-80b6-45214aa0156f');
 
  
  
-<div id="fea3a1e6-2d4b-4201-b457-3e25049ac918"></div>
+<div id="a60ea6c7-6c2f-403e-a76d-7cc59f3050e9"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#fea3a1e6-2d4b-4201-b457-3e25049ac918');
+var element = $('#a60ea6c7-6c2f-403e-a76d-7cc59f3050e9');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "3bbac45383164ac9a657a9133a1765df", "version_major": 2, "version_minor": 0}
+{"model_id": "d5968e46e69c4908b3a60513bb57ffab", "version_major": 2, "version_minor": 0}
 </script>
 </div>
 
@@ -14320,7 +14320,7 @@ var element = $('#fea3a1e6-2d4b-4201-b457-3e25049ac918');
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">recipe_name_features</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span>
     <span class="n">FunctionTransformer</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;recipe_name&#39;</span><span class="p">],</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-    <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span> <span class="c1"># Can try different vectorizers here</span>
+    <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">stop_words</span><span class="o">=</span><span class="s2">&quot;english&quot;</span><span class="p">,</span> <span class="n">sublinear_tf</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span> <span class="c1"># Can try different vectorizers here</span>
 </pre></div>
 
     </div>
@@ -14355,18 +14355,21 @@ var element = $('#fea3a1e6-2d4b-4201-b457-3e25049ac918');
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>array([[0.33333333, 0.33333333, 0.33333333, 0.33333333, 0.        ,
+<pre>array([[0.33333333, 0.33333333, 0.        , 0.        , 0.        ,
         0.        , 0.        , 0.        , 0.        , 0.33333333,
-        0.33333333, 0.        , 0.        , 0.        , 0.33333333,
-        0.33333333, 0.        , 0.        , 0.33333333, 0.        ],
-       [0.        , 0.        , 0.        , 0.        , 0.29651988,
-        0.        , 0.38988801, 0.38988801, 0.38988801, 0.        ,
+        0.33333333, 0.33333333, 0.        , 0.        , 0.        ,
+        0.33333333, 0.33333333, 0.33333333, 0.        , 0.        ,
+        0.        , 0.33333333, 0.        ],
+       [0.        , 0.        , 0.25966344, 0.        , 0.        ,
+        0.34142622, 0.34142622, 0.34142622, 0.34142622, 0.        ,
         0.        , 0.        , 0.        , 0.        , 0.        ,
-        0.        , 0.38988801, 0.38988801, 0.        , 0.38988801],
-       [0.        , 0.        , 0.        , 0.        , 0.35543247,
-        0.46735098, 0.        , 0.        , 0.        , 0.        ,
-        0.        , 0.46735098, 0.46735098, 0.46735098, 0.        ,
-        0.        , 0.        , 0.        , 0.        , 0.        ]])</pre>
+        0.        , 0.        , 0.        , 0.34142622, 0.34142622,
+        0.34142622, 0.        , 0.34142622],
+       [0.        , 0.        , 0.32200242, 0.42339448, 0.42339448,
+        0.        , 0.        , 0.        , 0.        , 0.        ,
+        0.        , 0.        , 0.42339448, 0.42339448, 0.42339448,
+        0.        , 0.        , 0.        , 0.        , 0.        ,
+        0.        , 0.        , 0.        ]])</pre>
 </div>
 
 </div>
@@ -14427,13 +14430,13 @@ var element = $('#fea3a1e6-2d4b-4201-b457-3e25049ac918');
 
  
  
-<div id="2d94bdf1-cec2-4eb8-b899-1663a2653ff1"></div>
+<div id="587cb9aa-f0b7-4758-8045-f75e7ca5aabb"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#2d94bdf1-cec2-4eb8-b899-1663a2653ff1');
+var element = $('#587cb9aa-f0b7-4758-8045-f75e7ca5aabb');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "d239cea74482409aac780f6408bcf5bf", "version_major": 2, "version_minor": 0}
+{"model_id": "b9fb840ac33f4167aa96c5772803aa75", "version_major": 2, "version_minor": 0}
 </script>
 </div>
 
@@ -14454,13 +14457,13 @@ var element = $('#2d94bdf1-cec2-4eb8-b899-1663a2653ff1');
 
  
  
-<div id="8f970035-3ba7-4be1-883c-de90311dfea0"></div>
+<div id="68097bf0-537f-49dc-9cbf-9fffca5f5cd7"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#8f970035-3ba7-4be1-883c-de90311dfea0');
+var element = $('#68097bf0-537f-49dc-9cbf-9fffca5f5cd7');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "17c18abceff6479f8eef923f55a80117", "version_major": 2, "version_minor": 0}
+{"model_id": "675a74ca7249470992a15a45a51e6be8", "version_major": 2, "version_minor": 0}
 </script>
 </div>
 
@@ -14480,7 +14483,7 @@ var element = $('#8f970035-3ba7-4be1-883c-de90311dfea0');
 </div></div><div class="fragment">
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now we have our sparse matrix with 45630 rows of recipes with 336707 feature columns.</p>
+<p>Now we have our sparse matrix with 45630 rows of recipes with 1356503 feature columns.</p>
 
 </div>
 </div>
@@ -14505,8 +14508,8 @@ var element = $('#8f970035-3ba7-4be1-883c-de90311dfea0');
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;45630x336707 sparse matrix of type &#39;&lt;class &#39;numpy.float64&#39;&gt;&#39;
-	with 7828486 stored elements in Compressed Sparse Row format&gt;</pre>
+<pre>&lt;45630x1356503 sparse matrix of type &#39;&lt;class &#39;numpy.float64&#39;&gt;&#39;
+	with 8454847 stored elements in Compressed Sparse Row format&gt;</pre>
 </div>
 
 </div>
@@ -14935,7 +14938,7 @@ var element = $('#8f970035-3ba7-4be1-883c-de90311dfea0');
 
     <span class="c1">## get top k=5 recipes most similar to target recipe</span>
     <span class="c1">## note: we can change the k value here for tuning</span>
-    <span class="n">get_top_sim</span> <span class="o">=</span> <span class="n">rated_recipes</span><span class="o">.</span><span class="n">nlargest</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;sim_score&quot;</span><span class="p">)</span>
+    <span class="n">get_top_sim</span> <span class="o">=</span> <span class="n">rated_recipes</span><span class="o">.</span><span class="n">nlargest</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;sim_score&quot;</span><span class="p">)</span>
 
     <span class="c1">## get the mean rating for our target_recipe_id (from all users)</span>
     <span class="n">mean_recipe_score</span> <span class="o">=</span> <span class="n">mean_ratings</span><span class="p">[</span><span class="n">mean_ratings</span><span class="p">[</span><span class="s2">&quot;recipe_id&quot;</span><span class="p">]</span> <span class="o">==</span>
@@ -15092,7 +15095,7 @@ var element = $('#8f970035-3ba7-4be1-883c-de90311dfea0');
                              <span class="n">train_df</span><span class="p">,</span> <span class="n">mean_ratings</span><span class="p">,</span> <span class="n">cust_feats</span><span class="p">)</span>
 
 <span class="c1"># only predict a subsample of 100 for faster runtimes</span>
-<span class="n">sample_test</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">sample_test</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="n">sample_test</span><span class="p">[</span><span class="s2">&quot;predictions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample_test</span><span class="o">.</span><span class="n">swifter</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">make_predictions</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
@@ -15110,13 +15113,13 @@ var element = $('#8f970035-3ba7-4be1-883c-de90311dfea0');
 
  
  
-<div id="43dfdb43-62e9-40c7-9ac5-562523a888a9"></div>
+<div id="d1a4cef3-4845-4055-87ca-e716975cec84"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#43dfdb43-62e9-40c7-9ac5-562523a888a9');
+var element = $('#d1a4cef3-4845-4055-87ca-e716975cec84');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "d4c3d4d0bb56478aaf37979676a2b3b8", "version_major": 2, "version_minor": 0}
+{"model_id": "e1f63e1b21274fa8a463f59643412d53", "version_major": 2, "version_minor": 0}
 </script>
 </div>
 
@@ -15163,8 +15166,8 @@ var element = $('#43dfdb43-62e9-40c7-9ac5-562523a888a9');
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Rounded MAE: 0.59
-Regular MAE: 0.6865760630126592
+<pre>Rounded MAE: 0.5872
+Regular MAE: 0.647502585644939
 </pre>
 </div>
 </div>
@@ -15218,39 +15221,39 @@ Regular MAE: 0.6865760630126592
   </thead>
   <tbody>
     <tr>
-      <th>9428</th>
-      <td>4964174</td>
-      <td>71805</td>
+      <th>192112</th>
+      <td>162660</td>
+      <td>20400</td>
       <td>5</td>
-      <td>4.333986</td>
+      <td>4.629124</td>
     </tr>
     <tr>
-      <th>224033</th>
-      <td>177428</td>
-      <td>229376</td>
+      <th>78976</th>
+      <td>3632174</td>
+      <td>231747</td>
       <td>5</td>
-      <td>4.171998</td>
+      <td>4.408311</td>
     </tr>
     <tr>
-      <th>70400</th>
-      <td>1644895</td>
-      <td>9011</td>
+      <th>50054</th>
+      <td>2702518</td>
+      <td>239493</td>
       <td>4</td>
-      <td>4.458330</td>
+      <td>4.260767</td>
     </tr>
     <tr>
-      <th>167724</th>
-      <td>3491809</td>
-      <td>216713</td>
+      <th>83107</th>
+      <td>2130772</td>
+      <td>12059</td>
       <td>5</td>
-      <td>4.429667</td>
+      <td>4.079057</td>
     </tr>
     <tr>
-      <th>149211</th>
-      <td>820260</td>
-      <td>6900</td>
-      <td>4</td>
-      <td>4.660954</td>
+      <th>131464</th>
+      <td>5209906</td>
+      <td>18943</td>
+      <td>5</td>
+      <td>3.507186</td>
     </tr>
   </tbody>
 </table>
@@ -15303,7 +15306,7 @@ Regular MAE: 0.6865760630126592
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Prediction: 4.515418300820612
+<pre>Prediction: 4.632107667676532
 Rounded: 5.0
 </pre>
 </div>
@@ -15363,13 +15366,13 @@ Rounded: 5.0
 
  
  
-<div id="9f2d60b7-fd99-48c7-a555-e6e22859625d"></div>
+<div id="ac80889f-3245-4338-99e7-313889843c2f"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#9f2d60b7-fd99-48c7-a555-e6e22859625d');
+var element = $('#ac80889f-3245-4338-99e7-313889843c2f');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "ed9ea319e1184a24ad3c676be9892de8", "version_major": 2, "version_minor": 0}
+{"model_id": "81f0e687e1b44d3f9245446c3429e201", "version_major": 2, "version_minor": 0}
 </script>
 </div>
 
@@ -15457,23 +15460,23 @@ var element = $('#9f2d60b7-fd99-48c7-a555-e6e22859625d');
       <th>0</th>
       <td>5568</td>
       <td>21412</td>
-      <td>4.435440</td>
-      <td>4.0</td>
+      <td>4.654985</td>
+      <td>5.0</td>
       <td>556821412</td>
     </tr>
     <tr>
       <th>1</th>
       <td>3964202</td>
       <td>75639</td>
-      <td>4.484182</td>
-      <td>4.0</td>
+      <td>4.628881</td>
+      <td>5.0</td>
       <td>396420275639</td>
     </tr>
     <tr>
       <th>2</th>
       <td>2621648</td>
       <td>18015</td>
-      <td>4.032037</td>
+      <td>4.135174</td>
       <td>4.0</td>
       <td>262164818015</td>
     </tr>
@@ -15489,7 +15492,7 @@ var element = $('#9f2d60b7-fd99-48c7-a555-e6e22859625d');
       <th>4</th>
       <td>1055463</td>
       <td>12051</td>
-      <td>3.698703</td>
+      <td>3.831862</td>
       <td>4.0</td>
       <td>105546312051</td>
     </tr>
@@ -15526,7 +15529,7 @@ var element = $('#9f2d60b7-fd99-48c7-a555-e6e22859625d');
 </div></div><div class="fragment">
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>On Kaggle, we achieved a Mean Absolute Error of 0.49466!</p>
+<p>On Kaggle, we achieved a Mean Absolute Error of 0.48766!</p>
 <p><strong>FIN</strong></p>
 
 </div>
